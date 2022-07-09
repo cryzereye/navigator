@@ -36,3 +36,14 @@ class links(db.Model):
             "desc": self.desc
         }
         return json
+
+class history(db.Model):
+    key = db.Column('key', db.Integer, primary_key = True)
+    timestamp = db.Column('timestamp', db.Date)
+    level = db.Column('level', db.Integer)
+    desc = db.Column('desc', db.Text)
+
+    def __init__(self, shortname, timestamp, level, desc):
+      self.timestamp = timestamp
+      self.level = level
+      self.desc = desc

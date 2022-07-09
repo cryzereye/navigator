@@ -20,3 +20,10 @@ CREATE TABLE links (
 			ON DELETE CASCADE
 			ON UPDATE NO ACTION
 );
+
+CREATE TABLE history (
+	key INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	timestamp DATE DEFAULT (datetime('now','localtime')) NOT NULL,
+	level INTEGER NOT NULL,
+	desc TEXT NOT NULL
+);
