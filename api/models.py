@@ -47,3 +47,12 @@ class history(db.Model):
       self.timestamp = timestamp
       self.level = level
       self.desc = desc
+
+    def getJSON(self):
+        json = {
+            "key" : self.key,
+            "timestamp" : self.timestamp,
+            "level" : self.level,
+            "desc": self.desc
+        }
+        return json
