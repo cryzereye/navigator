@@ -1,7 +1,9 @@
-from sqlite3 import Connection, DataError, DatabaseError, IntegrityError
+from sqlite3 import IntegrityError
 from app import app, db
 from flask import request
 from api.models import Scenario, Links, History
+from datetime import datetime
+
 
 @app.route('/scenario')
 def all_scenario():
@@ -31,6 +33,10 @@ def add_scenario():
    try:
       scenario = Scenario(shortname, desc)
       db.session.add(scenario)
+
+      history = History(datetime.now(), 1, shortname + " added with desc: " + desc)
+      db.session.add(history)
+
       db.session.commit()
       return "inserted"
    except IntegrityError:
