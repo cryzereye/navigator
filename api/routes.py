@@ -1,23 +1,40 @@
-from app import app
-from api.models import scenario, links, history
+from sqlite3 import Connection, DataError, DatabaseError, IntegrityError
+from app import app, db
+from flask import request
+from api.models import Scenario, Links, History
 
 @app.route('/scenario')
 def all_scenario():
    ret = {"data" : []}
-   for x in scenario.query.order_by("key"):
+   for x in Scenario.query.order_by("key"):
       ret["data"].append(x.getJSON())
    return ret
 
 @app.route('/links')
 def all_links():
    ret = {"data" : []}
-   for x in links.query.order_by("key"):
+   for x in Links.query.order_by("key"):
       ret["data"].append(x.getJSON())
    return ret
 
 @app.route('/history')
 def all_history():
    ret = {"data" : []}
-   for x in history.query.order_by("key"):
+   for x in History.query.order_by("key"):
       ret["data"].append(x.getJSON())
    return ret
+
+@app.route('/scenario/add', methods = ['POST'])
+def add_scenario():
+   shortname = request.form.get('shortname')
+   desc = request.form.get('desc')
+   try:
+      scenario = Scenario(shortname, desc)
+      db.session.add(scenario)
+      db.session.commit()
+      return "inserted"
+   except IntegrityError:
+      return "IntegrityError: Please check the body of the request"
+   except Exception as e:
+      print(str(e))
+      return "Exception: See console for error"
