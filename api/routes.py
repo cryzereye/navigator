@@ -38,7 +38,15 @@ def add_scenario():
       db.session.add(history)
 
       db.session.commit()
-      return "inserted"
+      
+      res =  {
+         "response": {
+            "key": scenario.key,
+            "shortname" : scenario.shortname,
+            "desc": scenario.desc
+         }
+      }
+      return res
    except IntegrityError:
       return "IntegrityError: Please check the body of the request"
    except Exception as e:
