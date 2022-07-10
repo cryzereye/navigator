@@ -21,7 +21,7 @@ class Scenario(db.Model):
         self.shortname = shortname
         self.desc = desc
 
-class Link(db.Model):
+class Links(db.Model):
     key = db.Column('key', db.Integer, primary_key = True)
     from_key = db.Column('from_key', db.Integer)
     to_key = db.Column('to_key', db.Integer)
@@ -31,6 +31,7 @@ class Link(db.Model):
         self.from_key = from_key
         self.to_key = to_key
         self.desc = desc
+        return True
    
     def getJSON(self):
         json = {

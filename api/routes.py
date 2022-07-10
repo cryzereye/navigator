@@ -1,7 +1,7 @@
 from sqlite3 import IntegrityError
 from app import app, db
 from flask import request
-from api.models import Scenario, Link, History
+from api.models import Scenario, Links, History
 from datetime import datetime
 
 
@@ -12,10 +12,10 @@ def all_scenario():
       ret["data"].append(x.getJSON())
    return ret
 
-@app.route('/link')
-def all_link():
+@app.route('/links')
+def all_links():
    ret = {"data" : []}
-   for x in Link.query.order_by("key"):
+   for x in Links.query.order_by("key"):
       ret["data"].append(x.getJSON())
    return ret
 
@@ -44,38 +44,6 @@ def add_scenario():
             "key": scenario.key,
             "shortname" : scenario.shortname,
             "desc": scenario.desc
-         }
-      }
-      return res
-   except IntegrityError:
-      return "IntegrityError: Please check the body of the request"
-   except Exception as e:
-      print(str(e))
-      return "Exception: See console for error"
-
-@app.route('/link/add', methods = ['POST'])
-def add_link():
-   from_sname = request.form.get('from_sname')
-   to_sname = request.form.get('to_sname')
-   desc = request.form.get('desc')
-   try:
-      from_key = Scenario.query.filter_by(shortname = from_sname).with_entities(Scenario.key).first()
-      to_key = Scenario.query.filter_by(shortname = to_sname).with_entities(Scenario.key).first()
-
-      link = Link(from_key[0], to_key[0], desc)
-      db.session.add(link)
-
-      history = History(datetime.now(), 1, from_sname + " linked to " + to_sname)
-      db.session.add(history)
-
-      db.session.commit()
-      
-      res =  {
-         "response": {
-            "key": link.key,
-            "from_sname" : from_sname,
-            "to_sname": to_sname,
-            "desc": desc
          }
       }
       return res
